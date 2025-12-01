@@ -1,0 +1,118 @@
+{% extends 'rh/base.html' %}
+
+{% block title %}Détails Candidat #{{ candidat.id }} - Service RH{% endblock %}
+
+{% block content %}
+<h2 style="color: #667eea; margin-bottom: 30px;">Détails du Candidat #{{ candidat.id }}</h2>
+
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'rh:liste_candidats' %}" class="btn" style="background: #6c757d;">← Retour à la liste</a>
+</div>
+
+<div class="card" style="margin-bottom: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <h3 style="color: white; margin-bottom: 20px;">Résultat de l'Évaluation</h3>
+    <div style="text-align: center; padding: 20px;">
+        <div style="font-size: 1.2em; margin-bottom: 10px; opacity: 0.9;">Probabilité de performance</div>
+        <div style="font-size: 2.5em; font-weight: bold; margin-bottom: 20px;">
+            {{ candidat.probabilite_performance|floatformat:2 }}%
+        </div>
+        <div class="progress-bar" style="background: rgba(255,255,255,0.3); margin: 20px 0;">
+            <div class="progress-fill" style="width: {{ candidat.probabilite_performance }}%; background: white;">
+                {{ candidat.probabilite_performance|floatformat:2 }}%
+            </div>
+        </div>
+        <div style="font-size: 1.5em; margin-top: 20px;">
+            {% if candidat.prediction_performance %}
+                <span style="background: rgba(255,255,255,0.3); padding: 10px 30px; border-radius: 25px; display: inline-block;">
+                    ✓ Performant après 6 mois
+                </span>
+            {% else %}
+                <span style="background: rgba(255,255,255,0.3); padding: 10px 30px; border-radius: 25px; display: inline-block;">
+                    ✗ Non performant après 6 mois
+                </span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3>Informations du Candidat</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Genre</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.get_genre_display }}</div>
+        </div>
+        <div class="form-group">
+            <label>Secondary Education %</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.secondary_education_p }}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Education Board Type</label>
+        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.get_education_board_type_display }}</div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3>Higher Secondary</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Higher Secondary %</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.higher_secondary_p }}</div>
+        </div>
+        <div class="form-group">
+            <label>H Education Board Type</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.get_h_education_board_type_display }}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Higher Secondary Specialization</label>
+        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.get_higher_secondary_specialization_display }}</div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3>Degree</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Degree %</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.degree_p }}</div>
+        </div>
+        <div class="form-group">
+            <label>Degree Type</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.get_degree_type_display }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3>Expérience Professionnelle</h3>
+    <div class="form-group">
+        <label>Work Experience</label>
+        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.get_work_experience_display }}</div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3>Tests et MBA</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Etest %</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.etest_p }}</div>
+        </div>
+        <div class="form-group">
+            <label>MBA %</label>
+            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.mba_p }}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Specialisation</label>
+        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">{{ candidat.get_specialisation_display }}</div>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{% url 'rh:liste_candidats' %}" class="btn" style="background: #6c757d;">Retour à la liste</a>
+</div>
+{% endblock %}
+

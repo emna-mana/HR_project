@@ -1,0 +1,169 @@
+{% extends 'rh/base.html' %}
+
+{% block title %}Évaluation de Performance Candidat - Service RH{% endblock %}
+
+{% block content %}
+<h2 style="color: #667eea; margin-bottom: 30px;">Évaluation de Performance Candidat (après 6 mois)</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="padding: 15px; margin-bottom: 20px; border-radius: 5px; background: {% if message.tags == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if message.tags == 'error' %}#721c24{% else %}#155724{% endif %};">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if probabilite is not None %}
+<div class="card" style="margin-bottom: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <h3 style="color: white; margin-bottom: 20px;">Résultat de l'Évaluation</h3>
+    <div style="text-align: center; padding: 20px;">
+        <div style="font-size: 1.2em; margin-bottom: 10px; opacity: 0.9;">Probabilité de performance</div>
+        <div style="font-size: 2.5em; font-weight: bold; margin-bottom: 20px;">
+            {{ probabilite|floatformat:2 }}%
+        </div>
+        <div class="progress-bar" style="background: rgba(255,255,255,0.3); margin: 20px 0;">
+            <div class="progress-fill" style="width: {{ probabilite }}%; background: white;">
+                {{ probabilite|floatformat:2 }}%
+            </div>
+        </div>
+        <div style="font-size: 1.5em; margin-top: 20px;">
+            {% if prediction %}
+                <span style="background: rgba(255,255,255,0.3); padding: 10px 30px; border-radius: 25px; display: inline-block;">
+                    ✓ Performant après 6 mois
+                </span>
+            {% else %}
+                <span style="background: rgba(255,255,255,0.3); padding: 10px 30px; border-radius: 25px; display: inline-block;">
+                    ✗ Non performant après 6 mois
+                </span>
+            {% endif %}
+        </div>
+        {% if candidat %}
+        <div style="margin-top: 20px;">
+            <a href="{% url 'rh:detail_candidat' candidat.id %}" class="btn" style="background: white; color: #667eea; margin-right: 10px;">Voir les détails</a>
+            <a href="{% url 'rh:liste_candidats' %}" class="btn" style="background: white; color: #667eea;">Voir la liste</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<form method="post" style="max-width: 900px;">
+    {% csrf_token %}
+    
+    <div class="card" style="margin-bottom: 20px;">
+        <h3>Informations du Candidat</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="genre">Genre *</label>
+                <select id="genre" name="genre" required>
+                    <option value="">Sélectionnez...</option>
+                    <option value="M" {% if form_data.genre == 'M' %}selected{% endif %}>Masculin</option>
+                    <option value="F" {% if form_data.genre == 'F' %}selected{% endif %}>Féminin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="secondary_education_p">Secondary Education % * (0-100)</label>
+                <input type="number" id="secondary_education_p" name="secondary_education_p" 
+                       min="0" max="100" step="0.01" value="{{ form_data.secondary_education_p }}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="education_board_type">Education Board Type *</label>
+            <select id="education_board_type" name="education_board_type" required>
+                <option value="">Sélectionnez...</option>
+                <option value="Central" {% if form_data.education_board_type == 'Central' %}selected{% endif %}>Central</option>
+                <option value="Others" {% if form_data.education_board_type == 'Others' %}selected{% endif %}>Autres</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-bottom: 20px;">
+        <h3>Higher Secondary</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="higher_secondary_p">Higher Secondary % * (0-100)</label>
+                <input type="number" id="higher_secondary_p" name="higher_secondary_p" 
+                       min="0" max="100" step="0.01" value="{{ form_data.higher_secondary_p }}" required>
+            </div>
+            <div class="form-group">
+                <label for="h_education_board_type">H Education Board Type *</label>
+                <select id="h_education_board_type" name="h_education_board_type" required>
+                    <option value="">Sélectionnez...</option>
+                    <option value="Central" {% if form_data.h_education_board_type == 'Central' %}selected{% endif %}>Central</option>
+                    <option value="Others" {% if form_data.h_education_board_type == 'Others' %}selected{% endif %}>Autres</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="higher_secondary_specialization">Higher Secondary Specialization *</label>
+            <select id="higher_secondary_specialization" name="higher_secondary_specialization" required>
+                <option value="">Sélectionnez...</option>
+                <option value="Commerce" {% if form_data.higher_secondary_specialization == 'Commerce' %}selected{% endif %}>Commerce</option>
+                <option value="Science" {% if form_data.higher_secondary_specialization == 'Science' %}selected{% endif %}>Science</option>
+                <option value="Arts" {% if form_data.higher_secondary_specialization == 'Arts' %}selected{% endif %}>Arts</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-bottom: 20px;">
+        <h3>Degree</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="degree_p">Degree % * (0-100)</label>
+                <input type="number" id="degree_p" name="degree_p" 
+                       min="0" max="100" step="0.01" value="{{ form_data.degree_p }}" required>
+            </div>
+            <div class="form-group">
+                <label for="degree_type">Degree Type *</label>
+                <select id="degree_type" name="degree_type" required>
+                    <option value="">Sélectionnez...</option>
+                    <option value="Sci&Tech" {% if form_data.degree_type == 'Sci&Tech' %}selected{% endif %}>Sciences & Technologie</option>
+                    <option value="Comm&Mgmt" {% if form_data.degree_type == 'Comm&Mgmt' %}selected{% endif %}>Commerce & Management</option>
+                    <option value="Others" {% if form_data.degree_type == 'Others' %}selected{% endif %}>Autres</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-bottom: 20px;">
+        <h3>Expérience Professionnelle</h3>
+        <div class="form-group">
+            <label for="work_experience">Work Experience *</label>
+            <select id="work_experience" name="work_experience" required>
+                <option value="">Sélectionnez...</option>
+                <option value="Yes" {% if form_data.work_experience == 'Yes' %}selected{% endif %}>Oui</option>
+                <option value="No" {% if form_data.work_experience == 'No' %}selected{% endif %}>Non</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-bottom: 20px;">
+        <h3>Tests et MBA</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="etest_p">Etest % * (0-100)</label>
+                <input type="number" id="etest_p" name="etest_p" 
+                       min="0" max="100" step="0.01" value="{{ form_data.etest_p }}" required>
+            </div>
+            <div class="form-group">
+                <label for="mba_p">MBA % * (0-100)</label>
+                <input type="number" id="mba_p" name="mba_p" 
+                       min="0" max="100" step="0.01" value="{{ form_data.mba_p }}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="specialisation">Specialisation *</label>
+            <select id="specialisation" name="specialisation" required>
+                <option value="">Sélectionnez...</option>
+                <option value="Mkt&HR" {% if form_data.specialisation == 'Mkt&HR' %}selected{% endif %}>Marketing & RH</option>
+                <option value="Mkt&Fin" {% if form_data.specialisation == 'Mkt&Fin' %}selected{% endif %}>Marketing & Finance</option>
+            </select>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <button type="submit" class="btn">Évaluer la Performance</button>
+    </div>
+</form>
+{% endblock %}
+

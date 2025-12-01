@@ -1,0 +1,83 @@
+{% extends 'rh/base.html' %}
+
+{% block title %}Liste des Candidats - Service RH{% endblock %}
+
+{% block content %}
+<h2 style="color: #667eea; margin-bottom: 30px;">Liste des Candidats</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="padding: 15px; margin-bottom: 20px; border-radius: 5px; background: {% if message.tags == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if message.tags == 'error' %}#721c24{% else %}#155724{% endif %};">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'rh:evaluer_candidat' %}" class="btn">➕ Évaluer un Candidat</a>
+    <a href="{% url 'rh:index' %}" class="btn" style="background: #6c757d; margin-left: 10px;">🏠 Accueil</a>
+</div>
+
+{% if candidats %}
+    <div class="card">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                    <th style="padding: 15px; text-align: left;">ID</th>
+                    <th style="padding: 15px; text-align: left;">Genre</th>
+                    <th style="padding: 15px; text-align: left;">Probabilité</th>
+                    <th style="padding: 15px; text-align: left;">Prédiction</th>
+                    <th style="padding: 15px; text-align: left;">Date</th>
+                    <th style="padding: 15px; text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidat in candidats %}
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 15px;">#{{ candidat.id }}</td>
+                    <td style="padding: 15px;">{{ candidat.get_genre_display }}</td>
+                    <td style="padding: 15px;">
+                        <strong style="color: {% if candidat.probabilite_performance >= 70 %}#28a745{% elif candidat.probabilite_performance >= 50 %}#ffc107{% else %}#dc3545{% endif %};">
+                            {{ candidat.probabilite_performance|floatformat:2 }}%
+                        </strong>
+                    </td>
+                    <td style="padding: 15px;">
+                        {% if candidat.prediction_performance %}
+                            <span style="background: #28a745; color: white; padding: 5px 15px; border-radius: 15px; font-size: 0.9em;">
+                                ✓ Performant
+                            </span>
+                        {% else %}
+                            <span style="background: #dc3545; color: white; padding: 5px 15px; border-radius: 15px; font-size: 0.9em;">
+                                ✗ Non performant
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 15px;">{{ candidat.date_creation|date:"d/m/Y H:i" }}</td>
+                    <td style="padding: 15px; text-align: center;">
+                        <a href="{% url 'rh:detail_candidat' candidat.id %}" class="btn" style="padding: 8px 20px; font-size: 0.9em;">Voir détails</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if candidats %}
+    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+        <h3 style="color: white; margin-bottom: 15px;">🏆 Meilleur Candidat</h3>
+        {% with meilleur=candidats.0 %}
+            <p style="font-size: 1.2em; margin-bottom: 10px;">
+                <strong>Candidat #{{ meilleur.id }}</strong> - Probabilité: {{ meilleur.probabilite_performance|floatformat:2 }}%
+            </p>
+            <a href="{% url 'rh:detail_candidat' meilleur.id %}" class="btn" style="background: white; color: #667eea;">Voir le profil complet</a>
+        {% endwith %}
+    </div>
+    {% endif %}
+{% else %}
+    <div class="card" style="text-align: center; padding: 40px;">
+        <p style="font-size: 1.2em; color: #666; margin-bottom: 20px;">Aucun candidat évalué pour le moment.</p>
+        <a href="{% url 'rh:evaluer_candidat' %}" class="btn">Évaluer le premier candidat</a>
+    </div>
+{% endif %}
+{% endblock %}
+

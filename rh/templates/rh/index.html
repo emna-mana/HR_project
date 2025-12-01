@@ -1,0 +1,26 @@
+{% extends 'rh/base.html' %}
+
+{% block title %}Accueil - Service RH{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 50px 20px;">
+    <h2 style="color: #667eea; margin-bottom: 30px;">Bienvenue dans le Service RH</h2>
+    <p style="font-size: 1.2em; color: #666; margin-bottom: 40px;">
+        Évaluez la performance des candidats après 6 mois et choisissez les meilleurs profils
+    </p>
+    
+    <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; max-width: 800px; margin: 0 auto;">
+        <div class="card" style="flex: 1; min-width: 250px; text-align: center;">
+            <h3 style="color: #667eea; margin-bottom: 15px;">📊 Évaluer</h3>
+            <p style="color: #666; margin-bottom: 20px;">Évaluez un candidat et sauvegardez-le automatiquement</p>
+            <a href="{% url 'rh:evaluer_candidat' %}" class="btn">Évaluer</a>
+        </div>
+        
+        <div class="card" style="flex: 1; min-width: 250px; text-align: center;">
+            <h3 style="color: #667eea; margin-bottom: 15px;">📋 Liste</h3>
+            <p style="color: #666; margin-bottom: 20px;">Consultez tous les candidats et choisissez le meilleur</p>
+            <a href="{% url 'rh:liste_candidats' %}" class="btn">Voir la liste</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
