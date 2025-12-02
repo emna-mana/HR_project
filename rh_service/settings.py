@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
     "hr-project-4mc9.onrender.com",
     "localhost",
     "127.0.0.1",
+    "hr-project-1-3ueh.onrender.com"
 ]
 
 
